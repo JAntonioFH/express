@@ -1,33 +1,35 @@
-// Importa Express y CORS
+// Importa Express y CORS para gestionar el servidor y habilitar el intercambio de recursos entre dominios
 const express = require('express');
 const cors = require('cors');
-const { config } = require('./config/config');
-// Crea una instancia de Express
-const app = express();
-// Habilita CORS en todas las rutas
-app.use(cors());
 
-// Define el puerto en el que escuchará el servidor
+// Importa las rutas definidas en un archivo externo
+const routerApi = require('./rutas');
+
+// Importa las variables de entorno desde un archivo de configuración
+const { config } = require('./config/config');
+
+// Define el puerto en el que se ejecutará el servidor, utilizando una variable de entorno
 const puerto = config.port;
 
-// Ruta raíz ("/") para responder a solicitudes GET
+// Crea una instancia de la aplicación de Express
+const app = express();
+
+// Habilita CORS para permitir solicitudes desde otros orígenes
+app.use(cors());
+
+// Permite que el servidor acepte solicitudes con datos en formato JSON
+app.use(express.json());
+
+// Registra las rutas definidas en el archivo 'rutas'
+routerApi(app);
+
+// Define la ruta raíz ("/") que responde a solicitudes GET
+// Aquí simplemente envía un mensaje de saludo como respuesta
 app.get('/', (req, res) => {
     res.send('¡Hola, Mundo con Express!');
 });
 
-// Ruta adicional "/about"
-app.get('/about', (req, res) => {
-    res.send('Esta es la página sobre nosotros.');
-});
-
-// Ruta con parámetros en la URL
-app.get('/saludo/:nombre', (req, res) => {
-    const nombre = req.params.nombre;
-    res.send(`¡Hola, ${nombre}!`);
-});
-
-// Inicia el servidor
+// Inicia el servidor y escucha en el puerto especificado
 app.listen(puerto, () => {
     console.log(`Servidor corriendo en http://localhost:${puerto}`);
 });
-
