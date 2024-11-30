@@ -1,13 +1,14 @@
 // Importa Express y CORS
 const express = require('express');
 const cors = require('cors');
+const { config } = require('./config/config');
 // Crea una instancia de Express
 const app = express();
 // Habilita CORS en todas las rutas
 app.use(cors());
 
 // Define el puerto en el que escuchará el servidor
-const puerto = 8080;
+const puerto = config.port;
 
 // Ruta raíz ("/") para responder a solicitudes GET
 app.get('/', (req, res) => {
@@ -29,3 +30,4 @@ app.get('/saludo/:nombre', (req, res) => {
 app.listen(puerto, () => {
     console.log(`Servidor corriendo en http://localhost:${puerto}`);
 });
+
